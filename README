@@ -1,0 +1,108 @@
+README for TEMT (1.0)
+
+* Introduction
+
+The next-generation sequencing technology RNA-Seq keeps growing as
+a major method for transcriptome research, e.g. transcript abundances
+estimation. However, the tissue heterogeneity problem widely presented
+in native tissue environment, can substantially confound the transcript
+abundances estimation of each individual cell type. Although experimental
+methods have been proposed to dissect multiple distinct cell types,
+computationally ``denoising'' heterogeneous tissue also stands out as a
+reliable alternative due to its own advantages, such as keeping the tissue
+sample as well as the subsequent molecular content yield intact. Here we
+propose a probabilistic model-based approach, Transcript Estimation from
+Mixed Tissue samples (TEMT), to estimate the transcript abundances of
+single cell type of interest via the RNA-Seq data from heterogeneous
+tissue sample. TEMT has incorporated the positional and sequence-specific
+bias, and with the online EM algorithm adopted, it has a time requirement
+proportional to the data size and a constant memory requirement. We tested
+the proposed method on a series of datasets from both simulation and ENCODE
+data, and the results of TEMT outperforms current directly estimation method.
+
+* Prerequisite
+
+Python version must be equal to 2.6 or 2.7 to run TEMT. We recommend
+using the version 2.6.5.
+
+numpy-1.3.0 or higher is required. numpy distributions can be found at:
+http://www.numpy.org/
+http://sourceforge.net/projects/numpy/files/
+
+scipy-0.7.0 or higher is required. scipy distributions can be found at:
+http://www.scipy.org/
+http://sourceforge.net/projects/scipy/files/
+
+pygr-0.8.2 is required. pygr distributions can be found at:
+http://code.google.com/p/pygr/
+
+* Usage
+
+Usage: TEMT.py [options] <-p pfile> <-m mfile> <-t tfile>  
+
+Example: TEMT.py -p pure.sam -m mix.sam -t transcripts.fasta -P 0.9 -l 75 -a type_a -b type_b -A 0 --bias-module 
+
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -p INREADS_P, --pure-sample=INREADS_P
+                        read alignment file of the pure sample in SAM format.
+                        REQUIRED
+  -m INREADS_M, --mixed-sample=INREADS_M
+                        read alignment file of the mixed sample in SAM format.
+                        REQUIRED
+  -t INTRANSCRIPTS, --transcripts=INTRANSCRIPTS
+                        reference transcripts file in fasta format. REQUIRED
+  -a OUTREADS_A, --type-a=OUTREADS_A
+                        the name of the output file of cell type a, which is
+                        the only cell type of the pure sample. DEFAULT:
+                        "type_a"
+  -b OUTREADS_B, --type-b=OUTREADS_B
+                        the name of the output file of cell type b, which is
+                        the second cell type within the mixed sample. DEFAULT:
+                        "type_b"
+  -P B_PROP, --type-b-proportion=B_PROP
+                        cell type b proportion. e.g. "-P 0.9". REQUIRED
+  -l READ_LEN, --read-length=READ_LEN
+                        read length. REQUIRED
+  -A ADD_ROUNDS, --additional-rounds=ADD_ROUNDS
+                        the number of addtional rounds of EM algorithm after
+                        the first online round. DEFAULT: 0
+  --bias-module         enable the positional and sequence specific bias
+                        module. DEFAULT: False
+				
+				
+* Example
+
+In the example_data directory, we presents two pairs of 75-bp read sets under directories
+b_proportion_50 and b_proportion_90 respectively, and one transcript set transcripts.fasta.
+For each pair of read sets, one is from pure tissue of cell type a, named type_a.fastq;
+while the other is from mixed tissue of cell type a and b, mixed with type b proportion,
+named mix.fastq.
+
+To run TEMT, first we need to align the read sets to the transcript set transcripts.fasta.
+We recommend to use bowtie for the reads alignment. e.g.
+
+bowtie-build transcripts.fasta transcripts
+bowtie -n 2 -k 10 -S ../transcripts type_a.fastq > type_a.sam
+bowtie -n 2 -k 10 -S ../transcripts mix.fastq > mix.sam
+
+Then, we can run TEMT with 1 round online EM and bias-module disabled under b_proportion_90 directory:
+
+TEMT.py -p type_a.sam -m mix.sam -t ../transcripts.fasta -P 0.9 -l 75 -a type_a -b type_b
+
+We can also run TEMT with additional online EM rounds and bias-model enabled, which both of
+these two options improve the accuracy:
+
+TEMT.py -p type_a.sam -m mix.sam -t ../transcripts.fasta -P 0.9 -l 75 -a type_a -b type_b -A 1 --bias-module
+
+* Output files
+
+1. type_a.temt is the relative transcript abundances of cell type a in terms of estimated counts and RPKM.
+2. type_b.temt is the relative transcript abundances of cell type b in terms of estimated counts and RPKM.
+
+Estimated counts is the esimated number of reads from the read set that originated from the target transcript.
+
+RPKM represents Reads Per Kilobase per Million mapped reads, which is a method of quantifying transcripts 
+expression from RNA-Seq data by normalizing for total transcript length and the number of sequencing reads.
