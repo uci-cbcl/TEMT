@@ -106,3 +106,11 @@ Estimated counts is the esimated number of reads from the read set that originat
 
 RPKM represents Reads Per Kilobase per Million mapped reads, which is a method of quantifying transcripts 
 expression from RNA-Seq data by normalizing for total transcript length and the number of sequencing reads.
+
+
+* Reference
+This work is mainly based on:
+(Li and Xie, BMC Bioinformatics, 2013). 
+The default parameter settings and some of the features are using:
+(Roberts and Pachter, Nature Methods, 2012)
+http://bio.math.berkeley.edu/eXpress/overview.html
