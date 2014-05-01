@@ -708,3 +708,4 @@ Example: %prog -p pure.sam -m mix.sam -t transcripts.fasta -P 0.9 -l 75 -a type_
 
 if __name__ == "__main__":
     main()
+
