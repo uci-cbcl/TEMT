@@ -110,7 +110,7 @@ expression from RNA-Seq data by normalizing for total transcript length and the 
 
 * Reference
 This work is mainly based on:
-(Li and Xie, BMC Bioinformatics, 2013). 
+(Li and Xie, A mixture model for expression deconvolution from RNA-seq in heterogeneous tissues, BMC Bioinformatics, 2013). 
 The default parameter settings and some of the features are using:
 (Roberts and Pachter, Nature Methods, 2012)
 http://bio.math.berkeley.edu/eXpress/overview.html
