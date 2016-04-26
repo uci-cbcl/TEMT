@@ -63,7 +63,7 @@ Options:
                         the second cell type within the mixed sample. DEFAULT:
                         "type_b"
   -P B_PROP, --type-b-proportion=B_PROP
-                        cell type b proportion. e.g. "-P 0.9". REQUIRED
+                        cell type b proportion prior. e.g. "-P 0.9". REQUIRED
   -l READ_LEN, --read-length=READ_LEN
                         read length. REQUIRED
   -A ADD_ROUNDS, --additional-rounds=ADD_ROUNDS
